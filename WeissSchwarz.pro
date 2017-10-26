@@ -6,9 +6,13 @@ CONFIG -= qt
 SOURCES += main.cpp \
     CCard.cpp \
     CSlot.cpp \
-    CBoard.cpp
+    CBoard.cpp \
+    CEffect.cpp \
+    CCost.cpp
 
 HEADERS += \
     CCard.h \
     CSlot.h \
-    CBoard.h
+    CBoard.h \
+    CEffect.h \
+    CCost.h

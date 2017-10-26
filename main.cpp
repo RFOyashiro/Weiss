@@ -52,7 +52,7 @@ namespace global {
         }
     }
 
-    void HandleEffect(unsigned Value, CBoard & Board, CSlot From, CSlot To) {
+    void HandleBoardEffect(unsigned Value, CBoard & Board, CSlot From, CSlot To) {
         CBoard TempBoard (Board);
         CSlot TempFrom = TempBoard.Get(From);
         CSlot TempTo = TempBoard.Get(To);
@@ -64,65 +64,79 @@ namespace global {
     }
 }
 
-namespace effect {
+
+
+
+namespace Effect {
+
+    //--- Slot Movement ---//
+
+    //Format :  FromTo(int value);
+
+    //--- Card Effect ---//
+
+    //Format : GainX(int value); X is a card attribute such as Soul, Power, Trigger, Level, Cost
+
+
 
     //--- From Library ---//
 
     void Draw (unsigned value) {
-        global::HandleEffect(value, Board, Board.getLibrary(), Board.getHand());
+        global::HandleBoardEffect(value, Board, Board.getLibrary(), Board.getHand());
     }
 
     void Tuto (unsigned value) {
-        global::HandleEffect((int) value * -1, Board, Board.getLibrary(), Board.getHand());
+        global::HandleBoardEffect((int) value * -1, Board, Board.getLibrary(), Board.getHand());
     }
 
     void Mill (unsigned value) {
-        global::HandleEffect(value, Board, Board.getLibrary(), Board.getWaitingRoom());
+        global::HandleBoardEffect(value, Board, Board.getLibrary(), Board.getWaitingRoom());
     }
 
     void BlindStock (unsigned value) {
-        global::HandleEffect(value, Board, Board.getLibrary(), Board.getStock());
+        global::HandleBoardEffect(value, Board, Board.getLibrary(), Board.getStock());
     }
 
-    void DeckToResolution (unsigned value) {
-        global::HandleEffect(value, Board, Board.getLibrary(), Board.getResolution());
+    void DeckToResolution (unsigned value) { //As for Taking Damage, Brainstorm, ...
+        global::HandleBoardEffect(value, Board, Board.getLibrary(), Board.getResolution());
     }
 
     void PlayFromDeck (unsigned value, CSlot To){
-        global::HandleEffect((int) value * -1, Board, Board.getLibrary(), To); //To can be Front Row (L, C, R) or Back Row (L, R)
+        global::HandleBoardEffect((int) value * -1, Board, Board.getLibrary(), To); //To can be Front Row (L, C, R) or Back Row (L, R)
     }
 
     void RevealTopDeck (unsigned value);
-    void LookTopDeck (unsigned value);
+    void LookTopDeck (unsigned value); //Same as RevealTopDeck(); but the opponent can't see it
 
     //--- From Waiting Room ---//
 
     void Salavage (unsigned value) {
-        global::HandleEffect((int) value * -1, Board, Board.getWaitingRoom(), Board.getHand());
-    }
-
-    void UnMill (unsigned value) {
-        global::HandleEffect((int) value * -1, Board, Board.getWaitingRoom(), Board.getLibrary());
+        global::HandleBoardEffect((int) value * -1, Board, Board.getWaitingRoom(), Board.getHand());
     }
 
     void StockFromWaiting (unsigned value) {
-        global::HandleEffect((int) value * -1, Board, Board.getWaitingRoom(), Board.getStock());
+        global::HandleBoardEffect((int) value * -1, Board, Board.getWaitingRoom(), Board.getStock());
     }
 
     void WaitingToResolution (unsigned value) {
-        global::HandleEffect(value, Board, Board.getWaitingRoom(), Board.getResolution());
+        global::HandleBoardEffect(value, Board, Board.getWaitingRoom(), Board.getResolution());
     }
 
+
+    //--- From Anywhere ---//
+
+    void ToTopDeck (unsigned value, CSlot From);
+    void ToBottomDeck (unsigned value, CSlot From);
 
 }
 
 int main()
 {
     srand(time(NULL));
-    effect::Draw(2);
-    effect::Mill(3);
-    effect::Tuto(1);
-    effect::BlindStock(1);
-    effect::DeckToResolution(2);
+    Effect::Draw(2);
+    Effect::Mill(3);
+    Effect::Tuto(1);
+    Effect::BlindStock(1);
+    Effect::DeckToResolution(2);
     return 0;
 }
